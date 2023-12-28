@@ -16,7 +16,7 @@ dependencies {
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("com.github.ben-manes.caffeine:caffeine:3.0.5")
     compileOnly("com.github.brcdev-minecraft:shopgui-api:2.2.0")
-    compileOnly("com.github.Gypopo:EconomyShopGUI-API:1.1.0")
+    implementation("com.github.Gypopo:EconomyShopGUI-API:1.1.0")
     compileOnly("com.github.N0RSKA:ScytherAPI:55a")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.7")
     compileOnly("net.citizensnpcs:citizens-main:2.0.31-SNAPSHOT") {
