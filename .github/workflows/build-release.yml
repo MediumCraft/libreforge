@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/build-release.yml'
       - 'eco-core/**/*'
+      - 'core/**/*'
       - 'gradle/**/*'
       - 'build.gradle.kts'
       - 'gradle.properties'
