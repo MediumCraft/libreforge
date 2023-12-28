@@ -37,7 +37,7 @@ allprojects {
         maven("https://maven.citizensnpcs.co/repo")
         maven("https://nexuslite.gcnt.net/repos/other/")
 
-        maven('https://jitpack.io')
+        maven("https://jitpack.io")
     }
 
     dependencies {
