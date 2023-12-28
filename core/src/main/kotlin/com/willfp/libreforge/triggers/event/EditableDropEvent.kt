@@ -1,10 +1,13 @@
 package com.willfp.libreforge.triggers.event
 
+import com.willfp.eco.util.toSingletonList
+import org.bukkit.Location
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 import org.bukkit.event.block.BlockDropItemEvent
 import org.bukkit.event.entity.EntityDeathEvent
+import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.inventory.ItemStack
 
 
@@ -51,6 +54,11 @@ abstract class EditableDropEvent : Event(), Cancellable {
     abstract val items: List<DropResult>
 
     /**
+     * The location of the drops.
+     */
+    abstract val dropLocation: Location
+
+    /**
      * Remove an item.
      */
     abstract fun removeItem(item: ItemStack)
@@ -85,6 +93,9 @@ class EditableEntityDropEvent(
     override val items: List<DropResult>
         get() = originalItems.map { modifiers.modify(it) }
 
+    override val dropLocation: Location
+        get() = event.entity.location
+
     override fun removeItem(item: ItemStack) {
         event.drops.remove(item)
     }
@@ -113,8 +124,44 @@ class EditableBlockDropEvent(
     override val items: List<DropResult>
         get() = originalItems.map { modifiers.modify(it) }
 
+    override val dropLocation: Location
+        get() = event.items.first().location
+
     override fun removeItem(item: ItemStack) {
         event.items.removeIf { it.itemStack == item }
+    }
+
+    override fun isCancelled(): Boolean {
+        return event.isCancelled
+    }
+
+    override fun setCancelled(p0: Boolean) {
+        event.isCancelled = p0
+    }
+}
+
+class EditablePlayerDropEvent(
+    private val event: PlayerDropItemEvent
+): EditableDropEvent() {
+    private val modifiers = mutableListOf<DropModifier>()
+
+    override fun addModifier(modifier: DropModifier) {
+        modifiers += modifier
+    }
+
+    override val originalItems: List<ItemStack>
+        get() = event.itemDrop.itemStack.toSingletonList()
+
+    override val items: List<DropResult>
+        get() = originalItems.map { modifiers.modify(it) }
+
+    override val dropLocation: Location
+        get() = event.itemDrop.location
+
+    override fun removeItem(item: ItemStack) {
+        if (event.itemDrop.itemStack == item) {
+            event.itemDrop.remove()
+        }
     }
 
     override fun isCancelled(): Boolean {
